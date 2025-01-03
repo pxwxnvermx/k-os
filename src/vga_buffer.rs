@@ -48,6 +48,7 @@ pub struct Writer {
     column_position: usize,
     color_code: ColorCode,
     buffer: &'static mut Buffer,
+    row_position: usize,
 }
 
 impl Writer {
@@ -58,7 +59,7 @@ impl Writer {
                 if self.column_position >= BUFFER_WIDTH {
                     self.new_line();
                 }
-                let row = BUFFER_HEIGHT - 1;
+                let row = self.row_position;
                 let col = self.column_position;
                 let color_code = self.color_code;
                 self.buffer.chars[row][col] = ScreenChar {
@@ -71,7 +72,10 @@ impl Writer {
     }
 
     fn new_line(&mut self) {
-        todo!();
+        if self.row_position < BUFFER_HEIGHT {
+            self.row_position += 1;
+            self.column_position = 0;
+        }
     }
 
     pub fn write_string(&mut self, s: &str) {
@@ -96,6 +100,7 @@ impl Write for Writer {
 pub fn print_something() {
     let mut writer = Writer {
         column_position: 0,
+        row_position: 0,
         color_code: ColorCode::new(Color::Blue, Color::White),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     };
