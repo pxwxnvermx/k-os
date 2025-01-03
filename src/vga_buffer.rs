@@ -84,11 +84,20 @@ impl Writer {
     }
 }
 
+use core::fmt::{Result, Write};
+
+impl Write for Writer {
+    fn write_str(&mut self, s: &str) -> Result {
+        self.write_string(s);
+        Ok(())
+    }
+}
+
 pub fn print_something() {
     let mut writer = Writer {
         column_position: 0,
         color_code: ColorCode::new(Color::Blue, Color::White),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     };
-    writer.write_string("Hello World !");
+    writeln!(writer, "Hello World").unwrap();
 }
