@@ -1,1 +1,7 @@
 /target
+
+*.a
+*.o
+*.bin
+*.dsm
+.obj/

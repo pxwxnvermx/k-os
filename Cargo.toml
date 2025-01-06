@@ -1,3 +1,7 @@
+[lib]
+path = "src/main.rs"
+crate-type = ["staticlib"]
+
 [package]
 name = "k-os"
 version = "0.1.0"
@@ -8,3 +12,4 @@ panic = "abort"
 
 [profile.release]
 panic = "abort"
+

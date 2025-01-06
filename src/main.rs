@@ -12,9 +12,8 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-static HELLO: &[u8] = b"HELLO WORLD!";
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+pub extern "C" fn kernel_main() -> ! {
     print_something();
     loop {}
 }
