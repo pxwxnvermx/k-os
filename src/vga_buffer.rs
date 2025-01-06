@@ -86,6 +86,17 @@ impl Writer {
             }
         }
     }
+
+    pub fn clean_buffer(&mut self) {
+        for row in 0..BUFFER_HEIGHT {
+            for col in 0..BUFFER_WIDTH {
+                self.buffer.chars[row][col] = ScreenChar {
+                    ascii_character: b' ',
+                    color_code: ColorCode::new(Color::White, Color::Black),
+                }
+            }
+        }
+    }
 }
 
 use core::fmt::{Result, Write};
@@ -104,5 +115,6 @@ pub fn print_something() {
         color_code: ColorCode::new(Color::Blue, Color::White),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     };
+    writer.clean_buffer();
     writeln!(writer, "Hello World").unwrap();
 }
