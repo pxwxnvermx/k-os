@@ -3,9 +3,11 @@
 
 mod vga_buffer;
 
-use core::panic::PanicInfo;
+use core::{arch::global_asm, panic::PanicInfo};
 
 use vga_buffer::print_something;
+
+global_asm!(include_str!("boot.S"), options(att_syntax));
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
