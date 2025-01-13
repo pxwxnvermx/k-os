@@ -52,6 +52,15 @@ pub struct Writer {
 }
 
 impl Writer {
+    pub fn new() -> Writer {
+        Writer {
+            column_position: 0,
+            row_position: 0,
+            color_code: ColorCode::new(Color::Blue, Color::White),
+            buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+        }
+    }
+
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),
@@ -78,10 +87,10 @@ impl Writer {
         }
     }
 
-    pub fn write_string(&mut self, s: &str) {
-        for byte in s.bytes() {
+    pub fn write_string(&mut self, data: &[u8]) {
+        for byte in data {
             match byte {
-                0x20..=0x7e | b'\n' => self.write_byte(byte),
+                0x20..=0x7e | b'\n' => self.write_byte(*byte),
                 _ => self.write_byte(0xfe),
             }
         }
@@ -103,18 +112,7 @@ use core::fmt::{Result, Write};
 
 impl Write for Writer {
     fn write_str(&mut self, s: &str) -> Result {
-        self.write_string(s);
+        self.write_string(s.as_bytes());
         Ok(())
     }
-}
-
-pub fn print_something() {
-    let mut writer = Writer {
-        column_position: 0,
-        row_position: 0,
-        color_code: ColorCode::new(Color::Blue, Color::White),
-        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-    };
-    writer.clean_buffer();
-    writeln!(writer, "Hello World").unwrap();
 }
