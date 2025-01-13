@@ -27,6 +27,12 @@ stack_top:
 _start:
 	mov $stack_top, %esp
 
+	# When GRUB runs, it loads the multiboot_info structure into memory and
+	# leaves the address of this structure in the EBX register. 
+	# https://wiki.osdev.org/Detecting_Memory_(x86)#Memory_Map_Via_GRUB
+	push %eax
+	push %ebx
+
 	call kernel_main
 
 	cli
