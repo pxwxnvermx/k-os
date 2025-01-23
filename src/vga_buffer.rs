@@ -52,15 +52,6 @@ pub struct Writer {
 }
 
 impl Writer {
-    pub fn new() -> Writer {
-        Writer {
-            column_position: 0,
-            row_position: 0,
-            color_code: ColorCode::new(Color::Blue, Color::White),
-            buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
-        }
-    }
-
     pub fn write_byte(&mut self, byte: u8) {
         match byte {
             b'\n' => self.new_line(),
@@ -108,11 +99,40 @@ impl Writer {
     }
 }
 
-use core::fmt::{Result, Write};
+use lazy_static::lazy_static;
+
+use crate::mutex::SpinMutex;
+use core::fmt::{Arguments, Result, Write};
 
 impl Write for Writer {
     fn write_str(&mut self, s: &str) -> Result {
         self.write_string(s.as_bytes());
         Ok(())
     }
+}
+
+lazy_static! {
+    pub static ref WRITER: SpinMutex<Writer> = SpinMutex::new(Writer {
+        column_position: 0,
+        row_position: 0,
+        color_code: ColorCode::new(Color::LightGray, Color::Black),
+        buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+    });
+}
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _print(args: Arguments) {
+    use core::fmt::Write;
+    WRITER.lock().write_fmt(args).unwrap();
 }
