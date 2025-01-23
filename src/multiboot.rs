@@ -1,6 +1,22 @@
 // https://www.gnu.org/software/grub/manual/multiboot/html_node/multiboot_002eh.html
 // https://www.gnu.org/software/grub/manual/multiboot/multiboot.html
 
+use core::fmt::{Display, Formatter, Result};
+
+pub struct BootLoaderName {
+    bytes: *const u8,
+}
+
+impl Display for BootLoaderName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        let boot_loader_name = unsafe { core::slice::from_raw_parts(self.bytes, 4) };
+        for b in boot_loader_name {
+            write!(f, "{}", *b as char).unwrap()
+        }
+        Ok(())
+    }
+}
+
 #[repr(C)]
 pub struct MultibootInfo {
     /* Multiboot info version number */
@@ -39,7 +55,7 @@ pub struct MultibootInfo {
     config_table: u32,
 
     /* Boot Loader Name */
-    pub boot_loader_name: *const u8,
+    pub boot_loader_name: BootLoaderName,
 
     /* APM table */
     apm_table: u32,
