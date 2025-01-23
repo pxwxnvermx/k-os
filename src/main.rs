@@ -39,6 +39,7 @@ pub extern "C" fn kernel_main(multiboot_info: *const MultibootInfo, magic: u32) 
 }
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    print!("Panicked at {}", info);
     loop {}
 }
