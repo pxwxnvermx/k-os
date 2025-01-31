@@ -40,3 +40,7 @@ _start:
 	jmp 1b
 
 .size _start, . - _start
+
+.section .kend
+.global end_of_kernel
+end_of_kernel:

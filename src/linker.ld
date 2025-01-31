@@ -25,4 +25,10 @@ SECTIONS
 		*(COMMON)
 		*(.bss)
 	}
+
+	/* end_of_kernel = ALIGN(4K); */
+	.kend BLOCK(4K): ALIGN(4K)
+	{
+		*(.kend)
+	}
 }
