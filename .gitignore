@@ -1,8 +1,8 @@
-/target
-/zig-out
-
-*.a
-*.o
-*.bin
-*.dsm
-.obj/
+.zig-cache/
+zig-out/
+/release/
+/debug/
+/build/
+/build-*/
+/docgen_tmp/
+zig-cache/

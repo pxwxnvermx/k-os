@@ -5,5 +5,5 @@ it's just a (o)k os. Nothing exciting here.
 - i686-elf-gcc compiler
 
 ```bash
-cargo run --release
+zig build run
 ```
