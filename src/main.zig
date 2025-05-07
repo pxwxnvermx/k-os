@@ -23,8 +23,8 @@ export fn _start() callconv(.Naked) noreturn {
     asm volatile (
         \\ movl %[stack_top], %%esp
         \\ movl %%esp, %%ebp
-        \\ push %%eax
-        \\ push %%ebx
+        \\ pushl %ebx
+        \\ pushl %eax
         \\ call %[kernel_main:P]
         :
         : [stack_top] "i" (@as([*]align(16) u8, &stack_bytes) + @sizeOf(@TypeOf(stack_bytes))),
