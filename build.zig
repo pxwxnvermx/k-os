@@ -28,6 +28,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    kernel.addAssemblyFile(b.path("src/boot.S"));
     kernel.setLinkerScript(b.path("src/linker.ld"));
     b.installArtifact(kernel);
 
