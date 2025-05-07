@@ -31,13 +31,8 @@ pub fn build(b: *std.Build) void {
     kernel.setLinkerScript(b.path("src/linker.ld"));
     b.installArtifact(kernel);
 
-    const kernel_step = b.step("kernel", "Build the kernel");
-    kernel_step.dependOn(&kernel.step);
-
-    b.enable_qemu = true;
-
     const run_cmd = b.addSystemCommand(&[_][]const u8{ "qemu-system-i386", "-kernel", "zig-out/bin/kernel.elf" });
-    const run_step = b.step("run", "Run the app");
-    run_cmd.step.dependOn(kernel_step);
+    run_cmd.step.dependOn(b.getInstallStep());
+    const run_step = b.step("run", "Run the kernel with qemu");
     run_step.dependOn(&run_cmd.step);
 }
