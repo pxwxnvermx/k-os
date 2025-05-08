@@ -12,7 +12,7 @@ pub const MultibootInfo = packed struct {
     drives_length: u32,
     drives_addr: u32,
     config_table: u32,
-    boot_loader_name: *const u8,
+    boot_loader_name: *const [4]u8,
 };
 
 const ALIGN = 1 << 0;
