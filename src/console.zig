@@ -1,6 +1,6 @@
 const std = @import("std");
 const fmt = std.fmt;
-const Writer = std.io.Writer;
+const Writer = std.Io.Writer;
 
 const VGA_WIDTH = 80;
 const VGA_HEIGHT = 25;
@@ -73,13 +73,20 @@ pub fn puts(data: []const u8) void {
         putChar(c);
 }
 
-pub const writer = Writer(void, error{}, callback){ .context = {} };
-
-fn callback(_: void, string: []const u8) error{}!usize {
-    puts(string);
-    return string.len;
+fn drain(_: *Writer, data: []const []const u8, _: usize) Writer.Error!usize {
+    puts(data[0]);
+    return data[0].len;
 }
 
+pub var writer = Writer{
+    .vtable = &.{
+        .drain = drain,
+        .flush = Writer.noopFlush,
+        .rebase = Writer.failingRebase,
+    },
+    .buffer = &.{},
+};
+
 pub fn printf(comptime format: []const u8, args: anytype) void {
-    fmt.format(writer, format, args) catch unreachable;
+    writer.print(format, args) catch unreachable;
 }
