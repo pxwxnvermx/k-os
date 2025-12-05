@@ -6,7 +6,7 @@ const MULTIBOOT_BOOTLOADER_MAGIC = @as(u32, 0x2BADB002);
 
 var stack_bytes: [16 * 1024]u8 align(16) linksection(".bss") = undefined;
 
-export fn _start() callconv(.Naked) noreturn {
+export fn _start() callconv(.naked) noreturn {
     asm volatile (
         \\ movl %[stack_top], %%esp
         \\ movl %%esp, %%ebp
