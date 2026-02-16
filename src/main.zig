@@ -22,8 +22,10 @@ export fn _start() callconv(.naked) noreturn {
 export fn kernel_main(magic: u32, info: *const multiboot_types.MultibootInfo) void {
     console.initialize();
 
-    console.printf("magic valid: {}\r\n", .{magic == MULTIBOOT_BOOTLOADER_MAGIC});
-    console.printf("Boot Loader={s}\r\n", .{info.boot_loader_name});
+    console.print("magic valid: {}\n", .{magic == MULTIBOOT_BOOTLOADER_MAGIC});
+    console.print("Boot Loader: {s}\n", .{info.boot_loader_name});
+
+    info.print_mem();
 
     while (true) {}
 }

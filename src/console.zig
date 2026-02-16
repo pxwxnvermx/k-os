@@ -87,6 +87,6 @@ pub var writer = Writer{
     .buffer = &.{},
 };
 
-pub fn printf(comptime format: []const u8, args: anytype) void {
+pub fn print(comptime format: []const u8, args: anytype) void {
     writer.print(format, args) catch unreachable;
 }
